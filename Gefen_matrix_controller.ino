@@ -16,6 +16,13 @@ int lastButton2State = HIGH;
 int lastButton3State = HIGH;
 int lastButton4State = HIGH;
 
+enum MatrixPreset{
+  GuiMain,
+  GuiSpare,
+  AllMain,
+  AllSpare
+};
+
 void setup() {
   Serial.begin(9600);
   pinMode(pinBtn1, INPUT_PULLUP);
@@ -39,37 +46,29 @@ void checkButtonsStates(){
   button4State = digitalRead(pinBtn4);
 
   if (button1State != lastButton1State) {
-    if (button1State == HIGH) {
-      Serial.println("1 off");
-    } else {
-      Serial.println("1 on");
+    if (button1State == LOW) {
+      sendMatrixPreset(GuiMain);
     }
     delay(50);
   }
 
   if (button2State != lastButton2State) {
-    if (button2State == HIGH) {
-      Serial.println("2 off");
-    } else {
-      Serial.println("2 on");
+    if (button2State == LOW) {
+      sendMatrixPreset(AllMain);
     }
     delay(50);
   }
 
   if (button3State != lastButton3State) {
-    if (button3State == HIGH) {
-      Serial.println("3 off");
-    } else {
-      Serial.println("3 on");
+    if (button3State == LOW) {
+      sendMatrixPreset(GuiSpare);
     }
     delay(50);
   }
 
   if (button4State != lastButton4State) {
-    if (button4State == HIGH) {
-      Serial.println("4 off");
-    } else {
-      Serial.println("4 on");
+    if (button4State == LOW) {
+      sendMatrixPreset(AllSpare);
     }
     delay(50);
   }
@@ -80,6 +79,19 @@ void checkButtonsStates(){
   lastButton4State = button4State;
 }
 
-void sendMatrixPreset(){
-  
+void sendMatrixPreset(MatrixPreset preset){
+  switch(preset){
+  case GuiMain: 
+    Serial.println("GUI Main"); 
+    break;  
+  case GuiSpare: 
+    Serial.println("GUI Spare"); 
+    break;
+  case AllMain: 
+    Serial.println("All Main"); 
+    break;
+  case AllSpare: 
+    Serial.println("All Spare"); 
+    break;
+  }
 }
