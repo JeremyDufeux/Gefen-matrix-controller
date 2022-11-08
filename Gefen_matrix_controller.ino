@@ -14,12 +14,10 @@ const int pinBtn2 = 34;
 const int pinBtn3 = 36;
 const int pinBtn4 = 38;
 
-const int pinLedBtn1 = 10;
-const int pinLedBtn2 = 11;
-const int pinLedBtn3 = 12;
-const int pinLedBtn4 = 13;
-
-int activeState = 0;
+const int pinLedBtn1 = 46;
+const int pinLedBtn2 = 48;
+const int pinLedBtn3 = 50;
+const int pinLedBtn4 = 52;
 
 int button1State = HIGH;
 int button2State = HIGH;
@@ -32,11 +30,14 @@ int lastButton3State = HIGH;
 int lastButton4State = HIGH;
 
 enum MatrixPreset{
+  None,
   GuiMain,
   GuiSpare,
   AllMain,
   AllSpare
 };
+
+MatrixPreset currentPreset = None;
 
 void setup() {
   Ethernet.begin(remoteMac, remoteIp);
@@ -64,9 +65,9 @@ void checkButtonsStates(){
 
   if (button1State != lastButton1State) {
     if (button1State == LOW) {
+      currentPreset = GuiMain;
       digitalWrite(pinLedBtn1, HIGH);
-      activeState = 1;
-      sendMatrixPreset(GuiMain);
+      sendMatrixPreset();
     } else {
       digitalWrite(pinLedBtn1, LOW);
     }
@@ -75,9 +76,9 @@ void checkButtonsStates(){
 
   if (button2State != lastButton2State) {
     if (button2State == LOW) {
+      currentPreset = AllMain;
       digitalWrite(pinLedBtn2, HIGH);
-      activeState = 2;
-      sendMatrixPreset(AllMain);
+      sendMatrixPreset();
     } else {
       digitalWrite(pinLedBtn2, LOW);
     }
@@ -86,9 +87,9 @@ void checkButtonsStates(){
 
   if (button3State != lastButton3State) {
     if (button3State == LOW) {
+      currentPreset = GuiSpare;
       digitalWrite(pinLedBtn3, HIGH);
-      activeState = 3;
-      sendMatrixPreset(GuiSpare);
+      sendMatrixPreset();
     } else {
       digitalWrite(pinLedBtn3, LOW);
     }
@@ -97,9 +98,9 @@ void checkButtonsStates(){
 
   if (button4State != lastButton4State) {
     if (button4State == LOW) {
+      currentPreset = AllSpare;
       digitalWrite(pinLedBtn4, HIGH);
-      activeState = 4;
-      sendMatrixPreset(AllSpare);
+      sendMatrixPreset();
     } else {
       digitalWrite(pinLedBtn4, LOW);
     }
@@ -112,15 +113,15 @@ void checkButtonsStates(){
   lastButton4State = button4State;
 }
 
-void sendMatrixPreset(MatrixPreset preset){
-  switch(preset){
+void sendMatrixPreset(){
+  switch(currentPreset){
   case GuiMain: 
     Serial.println("Switching GUI to Main...");
     if(client.connect(matrixIp, 23)){ 
       client.println("r 1 1");
-      Serial.println("...Done");
+      Serial.println("...done!");
     } else {
-      Serial.println("...Failed");
+      Serial.println("...failed!");
     }
     Serial.println("");
     break;  
@@ -128,9 +129,9 @@ void sendMatrixPreset(MatrixPreset preset){
     Serial.println("Switching GUI to Spare...");
     if(client.connect(matrixIp, 23)){ 
       client.println("r 5 1");
-      Serial.println("...Done");
+      Serial.println("...done!");
     } else {
-      Serial.println("...Failed");
+      Serial.println("...failed!");
     }
     Serial.println("");
     break;
@@ -138,9 +139,9 @@ void sendMatrixPreset(MatrixPreset preset){
     Serial.println("Switching All to Main...");
     if(client.connect(matrixIp, 23)){ 
       client.println("#callpreset 1");
-      Serial.println("...Done");
+      Serial.println("...done!");
     } else {
-      Serial.println("...Failed");
+      Serial.println("...failed!");
     }
     Serial.println("");
     break;
@@ -148,9 +149,9 @@ void sendMatrixPreset(MatrixPreset preset){
     Serial.println("Switching All to Spare...");
     if(client.connect(matrixIp, 23)){ 
       client.println("#callpreset 2");
-      Serial.println("...Done");
+      Serial.println("...done!");
     } else {
-      Serial.println("...Failed");
+      Serial.println("...failed!");
     }
     Serial.println("");
     break;
