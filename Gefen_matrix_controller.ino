@@ -38,6 +38,7 @@ enum MatrixPreset{
 };
 
 MatrixPreset currentPreset = None;
+int telnetCommandDelay = 10;
 
 void setup() {
   Ethernet.begin(remoteMac, remoteIp);
@@ -138,7 +139,16 @@ void sendMatrixPreset(){
   case AllMain: 
     Serial.println("Switching All to Main...");
     if(client.connect(matrixIp, 23)){ 
-      client.println("#callpreset 1");
+      //client.println("#callpreset 1");
+      client.println("r 1 1");
+      delay(telnetCommandDelay);
+      client.println("r 2 2");
+      delay(telnetCommandDelay);
+      client.println("r 3 3");
+      delay(telnetCommandDelay);
+      client.println("r 4 4");
+      delay(telnetCommandDelay);
+      client.println("r 4 5");
       Serial.println("...done!");
     } else {
       Serial.println("...failed!");
@@ -148,7 +158,16 @@ void sendMatrixPreset(){
   case AllSpare: 
     Serial.println("Switching All to Spare...");
     if(client.connect(matrixIp, 23)){ 
-      client.println("#callpreset 2");
+      //client.println("#callpreset 2");
+      client.println("r 5 1");
+      delay(telnetCommandDelay);
+      client.println("r 6 2");
+      delay(telnetCommandDelay);
+      client.println("r 7 3");
+      delay(telnetCommandDelay);
+      client.println("r 8 4");
+      delay(telnetCommandDelay);
+      client.println("r 8 5");
       Serial.println("...done!");
     } else {
       Serial.println("...failed!");
