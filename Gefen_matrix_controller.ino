@@ -10,25 +10,25 @@ IPAddress matrixSpareIp(192, 168, 10, 201);
 
 EthernetClient client;
 
-const int pinBtn1 = 32;
-const int pinBtn2 = 34;
-const int pinBtn3 = 36;
-const int pinBtn4 = 38;
+const int pinBtnGuiMain = 32;
+const int pinBtnAllMain = 34;
+const int pinBtnGuiSpare = 36;
+const int pinBtnAllSpare = 38;
 
-const int pinLedBtn1 = 46;
-const int pinLedBtn2 = 48;
-const int pinLedBtn3 = 50;
-const int pinLedBtn4 = 52;
+const int pinLedBtnGuiMain = 46;
+const int pinLedBtnAllMain = 48;
+const int pinLedBtnGuiSpare = 50;
+const int pinLedBtnAllSpare = 52;
 
-int button1State = HIGH;
-int button2State = HIGH;
-int button3State = HIGH;
-int button4State = HIGH;
+int buttonGuiMainState = HIGH;
+int buttonAllMainState = HIGH;
+int buttonGuiSpareState = HIGH;
+int buttonAllSpareState = HIGH;
 
-int lastButton1State = HIGH;
-int lastButton2State = HIGH;
-int lastButton3State = HIGH;
-int lastButton4State = HIGH;
+int lastButtonGuiMainState = HIGH;
+int lastButtonAllMainState = HIGH;
+int lastButtonGuiSpareState = HIGH;
+int lastButtonAllSpareState = HIGH;
 
 enum MatrixPreset{
   None,
@@ -45,14 +45,14 @@ void setup() {
   Ethernet.begin(remoteMac, remoteIp);
   Serial.begin(9600);
 
-  pinMode(pinBtn1, INPUT_PULLUP);
-  pinMode(pinBtn2, INPUT_PULLUP);
-  pinMode(pinBtn3, INPUT_PULLUP);
-  pinMode(pinBtn4, INPUT_PULLUP);
-  pinMode(pinLedBtn1, OUTPUT);
-  pinMode(pinLedBtn2, OUTPUT);
-  pinMode(pinLedBtn3, OUTPUT);
-  pinMode(pinLedBtn4, OUTPUT);
+  pinMode(pinBtnGuiMain, INPUT_PULLUP);
+  pinMode(pinBtnAllMain, INPUT_PULLUP);
+  pinMode(pinBtnGuiSpare, INPUT_PULLUP);
+  pinMode(pinBtnAllSpare, INPUT_PULLUP);
+  pinMode(pinLedBtnGuiMain, OUTPUT);
+  pinMode(pinLedBtnAllMain, OUTPUT);
+  pinMode(pinLedBtnGuiSpare, OUTPUT);
+  pinMode(pinLedBtnAllSpare, OUTPUT);
 }
 
 void loop() {
@@ -60,63 +60,63 @@ void loop() {
 }
 
 void checkButtonsStates(){
-  button1State = digitalRead(pinBtn1);
-  button2State = digitalRead(pinBtn2);
-  button3State = digitalRead(pinBtn3);
-  button4State = digitalRead(pinBtn4);
+  buttonGuiMainState = digitalRead(pinBtnGuiMain);
+  buttonAllMainState = digitalRead(pinBtnAllMain);
+  buttonGuiSpareState = digitalRead(pinBtnGuiSpare);
+  buttonAllSpareState = digitalRead(pinBtnAllSpare);
 
-  if (button1State != lastButton1State) {
-    if (button1State == LOW) {
+  if (buttonGuiMainState != lastButtonGuiMainState) {
+    if (buttonGuiMainState == LOW) {
       currentPreset = GuiMain;
-      digitalWrite(pinLedBtn1, HIGH);
+      digitalWrite(pinLedBtnGuiMain, HIGH);
       sendMatrixPreset(matrixMainIp);
-      sendMatrixPreset(matrixSpareIp);
+      sendMatrixPreset(matrixSpareIp);  
     } else {
-      digitalWrite(pinLedBtn1, LOW);
+      digitalWrite(pinLedBtnGuiMain, LOW);
     }
     delay(50);
   }
 
-  if (button2State != lastButton2State) {
-    if (button2State == LOW) {
+  if (buttonAllMainState != lastButtonAllMainState) {
+    if (buttonAllMainState == LOW) {
       currentPreset = AllMain;
-      digitalWrite(pinLedBtn2, HIGH);
+      digitalWrite(pinLedBtnAllMain, HIGH);
       sendMatrixPreset(matrixMainIp);
       sendMatrixPreset(matrixSpareIp);
     } else {
-      digitalWrite(pinLedBtn2, LOW);
+      digitalWrite(pinLedBtnAllMain, LOW);
     }
     delay(50);
   }
 
-  if (button3State != lastButton3State) {
-    if (button3State == LOW) {
+  if (buttonGuiSpareState != lastButtonGuiSpareState) {
+    if (buttonGuiSpareState == LOW) {
       currentPreset = GuiSpare;
-      digitalWrite(pinLedBtn3, HIGH);
+      digitalWrite(pinLedBtnGuiSpare, HIGH);
       sendMatrixPreset(matrixMainIp);
       sendMatrixPreset(matrixSpareIp);
     } else {
-      digitalWrite(pinLedBtn3, LOW);
+      digitalWrite(pinLedBtnGuiSpare, LOW);
     }
     delay(50);
   }
 
-  if (button4State != lastButton4State) {
-    if (button4State == LOW) {
+  if (buttonAllSpareState != lastButtonAllSpareState) {
+    if (buttonAllSpareState == LOW) {
       currentPreset = AllSpare;
-      digitalWrite(pinLedBtn4, HIGH);
+      digitalWrite(pinLedBtnAllSpare, HIGH);
       sendMatrixPreset(matrixMainIp);
       sendMatrixPreset(matrixSpareIp);
     } else {
-      digitalWrite(pinLedBtn4, LOW);
+      digitalWrite(pinLedBtnAllSpare, LOW);
     }
     delay(50);
   }
   
-  lastButton1State = button1State;
-  lastButton2State = button2State;
-  lastButton3State = button3State;
-  lastButton4State = button4State;
+  lastButtonGuiMainState = buttonGuiMainState;
+  lastButtonAllMainState = buttonAllMainState;
+  lastButtonGuiSpareState = buttonGuiSpareState;
+  lastButtonAllSpareState = buttonAllSpareState;
 }
 
 void sendMatrixPreset(IPAddress ip){
