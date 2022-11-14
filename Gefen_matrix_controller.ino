@@ -5,7 +5,8 @@
 
 byte remoteMac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 IPAddress remoteIp(192, 168, 10, 200);
-IPAddress matrixIp(192, 168, 10, 201);
+IPAddress matrixMainIp(192, 168, 10, 201);
+IPAddress matrixSpareIp(192, 168, 10, 201);
 
 EthernetClient client;
 
@@ -68,7 +69,8 @@ void checkButtonsStates(){
     if (button1State == LOW) {
       currentPreset = GuiMain;
       digitalWrite(pinLedBtn1, HIGH);
-      sendMatrixPreset();
+      sendMatrixPreset(matrixMainIp);
+      sendMatrixPreset(matrixSpareIp);
     } else {
       digitalWrite(pinLedBtn1, LOW);
     }
@@ -79,7 +81,8 @@ void checkButtonsStates(){
     if (button2State == LOW) {
       currentPreset = AllMain;
       digitalWrite(pinLedBtn2, HIGH);
-      sendMatrixPreset();
+      sendMatrixPreset(matrixMainIp);
+      sendMatrixPreset(matrixSpareIp);
     } else {
       digitalWrite(pinLedBtn2, LOW);
     }
@@ -90,7 +93,8 @@ void checkButtonsStates(){
     if (button3State == LOW) {
       currentPreset = GuiSpare;
       digitalWrite(pinLedBtn3, HIGH);
-      sendMatrixPreset();
+      sendMatrixPreset(matrixMainIp);
+      sendMatrixPreset(matrixSpareIp);
     } else {
       digitalWrite(pinLedBtn3, LOW);
     }
@@ -101,7 +105,8 @@ void checkButtonsStates(){
     if (button4State == LOW) {
       currentPreset = AllSpare;
       digitalWrite(pinLedBtn4, HIGH);
-      sendMatrixPreset();
+      sendMatrixPreset(matrixMainIp);
+      sendMatrixPreset(matrixSpareIp);
     } else {
       digitalWrite(pinLedBtn4, LOW);
     }
@@ -114,11 +119,11 @@ void checkButtonsStates(){
   lastButton4State = button4State;
 }
 
-void sendMatrixPreset(){
+void sendMatrixPreset(IPAddress ip){
   switch(currentPreset){
   case GuiMain: 
     Serial.println("Switching GUI to Main...");
-    if(client.connect(matrixIp, 23)){ 
+    if(client.connect(ip, 23)){ 
       client.println("r 1 1");
       Serial.println("...done!");
     } else {
@@ -128,7 +133,7 @@ void sendMatrixPreset(){
     break;  
   case GuiSpare: 
     Serial.println("Switching GUI to Spare...");
-    if(client.connect(matrixIp, 23)){ 
+    if(client.connect(ip, 23)){ 
       client.println("r 5 1");
       Serial.println("...done!");
     } else {
@@ -138,7 +143,7 @@ void sendMatrixPreset(){
     break;
   case AllMain: 
     Serial.println("Switching All to Main...");
-    if(client.connect(matrixIp, 23)){ 
+    if(client.connect(ip, 23)){ 
       //client.println("#callpreset 1");
       client.println("r 1 1");
       delay(telnetCommandDelay);
@@ -157,7 +162,7 @@ void sendMatrixPreset(){
     break;
   case AllSpare: 
     Serial.println("Switching All to Spare...");
-    if(client.connect(matrixIp, 23)){ 
+    if(client.connect(ip, 23)){ 
       //client.println("#callpreset 2");
       client.println("r 5 1");
       delay(telnetCommandDelay);
