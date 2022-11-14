@@ -113,10 +113,47 @@ void checkButtonsStates(){
     delay(50);
   }
   
+  updateLedState();
+  
   lastButtonGuiMainState = buttonGuiMainState;
   lastButtonAllMainState = buttonAllMainState;
   lastButtonGuiSpareState = buttonGuiSpareState;
   lastButtonAllSpareState = buttonAllSpareState;
+}
+
+void updateLedState(){
+  switch(currentPreset){
+  case GuiMain: 
+      digitalWrite(pinLedBtnGuiMain, HIGH);
+      digitalWrite(pinLedBtnAllMain, LOW);
+      digitalWrite(pinLedBtnGuiSpare, LOW);
+      digitalWrite(pinLedBtnAllSpare, LOW);
+    break;
+  case GuiSpare: 
+      digitalWrite(pinLedBtnGuiMain, LOW);
+      digitalWrite(pinLedBtnAllMain, HIGH);
+      digitalWrite(pinLedBtnGuiSpare, LOW);
+      digitalWrite(pinLedBtnAllSpare, LOW);
+    break;
+  case AllMain: 
+      digitalWrite(pinLedBtnGuiMain, LOW);
+      digitalWrite(pinLedBtnAllMain, LOW);
+      digitalWrite(pinLedBtnGuiSpare, HIGH);
+      digitalWrite(pinLedBtnAllSpare, LOW);
+    break;
+  case AllSpare:
+      digitalWrite(pinLedBtnGuiMain, LOW);
+      digitalWrite(pinLedBtnAllMain, LOW);
+      digitalWrite(pinLedBtnGuiSpare, LOW);
+      digitalWrite(pinLedBtnAllSpare, HIGH);
+    break;
+  default:
+      digitalWrite(pinLedBtnGuiMain, LOW);
+      digitalWrite(pinLedBtnAllMain, LOW);
+      digitalWrite(pinLedBtnGuiSpare, LOW);
+      digitalWrite(pinLedBtnAllSpare, LOW);
+    break;
+  }
 }
 
 void sendMatrixPreset(IPAddress ip){
